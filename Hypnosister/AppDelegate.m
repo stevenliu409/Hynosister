@@ -26,8 +26,7 @@
     [self.window setRootViewController:vc];
 
     
-    BNRHypnosisView *firstView = [[BNRHypnosisView alloc] initWithFrame:CGRectMake(160, 240, 100, 150)];
-    firstView.backgroundColor = [UIColor redColor];
+    BNRHypnosisView *firstView = [[BNRHypnosisView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:firstView];
     
     self.window.backgroundColor = [UIColor whiteColor];
