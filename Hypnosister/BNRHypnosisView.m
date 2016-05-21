@@ -44,6 +44,14 @@
     [[UIColor lightGrayColor] setStroke]; // set the color of stroke
     
     [path stroke]; // draw the circle
+    
+    UIImage *logoImage = [UIImage imageNamed:@"BNRLogo"];
+    
+    [logoImage drawInRect:CGRectMake(center.x-(logoImage.size.width/2),
+                                     center.y-(logoImage.size.height/2) - 20,
+                                     logoImage.size.width,
+                                     logoImage.size.height)];
+
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
