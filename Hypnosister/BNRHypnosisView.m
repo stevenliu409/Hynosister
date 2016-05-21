@@ -8,12 +8,20 @@
 
 #import "BNRHypnosisView.h"
 
-@implementation BNRHypnosisView
 
+@interface BNRHypnosisView()
+
+@property (nonatomic, strong) UIColor *circleColor;
+
+@end
+
+
+@implementation BNRHypnosisView
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
+- (void)drawRect:(CGRect)rect
+{
     // Drawing code
     
     CGRect bounds = self.bounds;
@@ -41,7 +49,7 @@
     
     path.lineWidth = 10.0; // set the stroke width
     
-    [[UIColor lightGrayColor] setStroke]; // set the color of stroke
+    [self.circleColor setStroke]; // set the color of stroke
     
     [path stroke]; // draw the circle
     
@@ -82,7 +90,8 @@
 
 - (void)drawShadowWithContext:(CGContextRef)currentContext
                       onImage:(UIImage *)image
-                     withFrame:(CGRect)frame {
+                     withFrame:(CGRect)frame
+{
     
     CGContextSetShadow(currentContext, CGSizeMake(4, 7), 1); // create the shadow
     
@@ -90,7 +99,8 @@
     [image drawInRect:frame];
 }
 
-- (void)drawGradientWithContext:(CGContextRef)currentContext startPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint {
+- (void)drawGradientWithContext:(CGContextRef)currentContext startPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
+{
     
     CGFloat locations[2] = {0.0, 1.0};
     CGFloat components[8] = {0.0, 1.0, 0.0, 1.0, //start color = green (RGBA)
@@ -109,7 +119,8 @@
     CGColorSpaceRelease(colorspace);
 }
 
-- (UIBezierPath *)createBezierTrianglePathWithPoints:(CGPoint)p1 p2:(CGPoint)p2 p3:(CGPoint)p3 {
+- (UIBezierPath *)createBezierTrianglePathWithPoints:(CGPoint)p1 p2:(CGPoint)p2 p3:(CGPoint)p3
+{
     UIBezierPath *trianglePath = [[UIBezierPath alloc] init];
     
     [trianglePath moveToPoint:p1];
@@ -120,11 +131,25 @@
     return trianglePath;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame
+{
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
+        self.circleColor = [UIColor lightGrayColor];
     }
     return self;
+}
+
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"%@ was touched", self);
+    
+    float red = (arc4random() % 100) / 100.0;
+    float green = (arc4random() % 100) / 100.0;
+    float blue = (arc4random() % 100) / 100.0;
+    
+    self.circleColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0];
 }
 
 @end

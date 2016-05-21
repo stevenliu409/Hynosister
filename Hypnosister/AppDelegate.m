@@ -22,12 +22,12 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    ViewController *vc = [[ViewController alloc] init];
-    [self.window setRootViewController:vc];
+    ViewController *rootVC = [[ViewController alloc] init];
+    [self.window setRootViewController:rootVC];
 
     
     BNRHypnosisView *firstView = [[BNRHypnosisView alloc] initWithFrame:self.window.bounds];
-    [self.window addSubview:firstView];
+    [rootVC.view addSubview:firstView]; //need to add subview to rootViewController and not the app delegate window 
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
