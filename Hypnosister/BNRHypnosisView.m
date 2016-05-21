@@ -45,13 +45,70 @@
     
     [path stroke]; // draw the circle
     
+    CGContextRef currentContext = UIGraphicsGetCurrentContext(); //grab the current graphics context
+    
+    CGContextSaveGState(currentContext); // need to save the state before creating a gradient
+
     UIImage *logoImage = [UIImage imageNamed:@"BNRLogo"];
     
-    [logoImage drawInRect:CGRectMake(center.x-(logoImage.size.width/2),
-                                     center.y-(logoImage.size.height/2) - 20,
-                                     logoImage.size.width,
-                                     logoImage.size.height)];
+    UIBezierPath *trianglePath = [[UIBezierPath alloc] init];
+    
+    CGPoint startPoint = CGPointMake(center.x, center.y-(logoImage.size.height/2) - 20);
+    
+    CGPoint endPoint = CGPointMake(center.x-(logoImage.size.width/2), center.y-(logoImage.size.height/2)  + logoImage.size.height);
+    
+    CGPoint thirdPoint = CGPointMake(center.x-(logoImage.size.width/2) + logoImage.size.width, center.y-(logoImage.size.height/2)  + logoImage.size.height);
+    
+    [trianglePath moveToPoint:startPoint];
+    [trianglePath addLineToPoint:endPoint];
+    [trianglePath addLineToPoint:thirdPoint];
+    [trianglePath closePath];
+    
+    [trianglePath addClip];
 
+    [self drawGradientWithContext:currentContext startPoint:startPoint endPoint:endPoint];
+
+    CGContextRestoreGState(currentContext); // turn off Core Graphics draw methods
+
+    CGContextSaveGState(currentContext); // need to save the state before creating a shadow
+    
+    CGRect logoFrame = CGRectMake(center.x-(logoImage.size.width/2),
+               center.y-(logoImage.size.height/2) - 20,
+               logoImage.size.width,
+               logoImage.size.height);
+    
+    [self drawShadowWithContext:currentContext onImage:logoImage withFrame:logoFrame];
+
+    CGContextRestoreGState(currentContext); // turn off Core Graphics draw methods
+}
+
+- (void)drawShadowWithContext:(CGContextRef)currentContext
+                      onImage:(UIImage *)image
+                     withFrame:(CGRect)frame {
+    
+    CGContextSetShadow(currentContext, CGSizeMake(4, 7), 1); // create the shadow
+    
+    // draw the elements, will appear with the shadow
+    [image drawInRect:frame];
+}
+
+- (void)drawGradientWithContext:(CGContextRef)currentContext startPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint {
+    
+    CGFloat locations[2] = {0.0, 1.0};
+    CGFloat components[8] = {0.0, 1.0, 0.0, 1.0, //start color = green (RGBA)
+        1.0, 1.0, 0.0, 1.0}; // end color = yellow
+    
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    
+    // create the gradient
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 2);
+    
+    // draw the gradient
+    CGContextDrawLinearGradient(currentContext, gradient, startPoint, endPoint, 0);
+    
+    // need to manually release these as per documentation
+    CGGradientRelease(gradient);
+    CGColorSpaceRelease(colorspace);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
