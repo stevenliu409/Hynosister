@@ -47,25 +47,23 @@
     
     CGContextRef currentContext = UIGraphicsGetCurrentContext(); //grab the current graphics context
     
-    CGContextSaveGState(currentContext); // need to save the state before creating a gradient
-
     UIImage *logoImage = [UIImage imageNamed:@"BNRLogo"];
     
-    UIBezierPath *trianglePath = [[UIBezierPath alloc] init];
+    CGPoint startPoint = CGPointMake(center.x,
+                                     center.y-(logoImage.size.height/2) - 20);
     
-    CGPoint startPoint = CGPointMake(center.x, center.y-(logoImage.size.height/2) - 20);
+    CGPoint endPoint = CGPointMake(center.x-(logoImage.size.width/2),
+                                   center.y-(logoImage.size.height/2) + logoImage.size.height);
     
-    CGPoint endPoint = CGPointMake(center.x-(logoImage.size.width/2), center.y-(logoImage.size.height/2)  + logoImage.size.height);
-    
-    CGPoint thirdPoint = CGPointMake(center.x-(logoImage.size.width/2) + logoImage.size.width, center.y-(logoImage.size.height/2)  + logoImage.size.height);
-    
-    [trianglePath moveToPoint:startPoint];
-    [trianglePath addLineToPoint:endPoint];
-    [trianglePath addLineToPoint:thirdPoint];
-    [trianglePath closePath];
-    
-    [trianglePath addClip];
+    CGPoint thirdPoint = CGPointMake(center.x-(logoImage.size.width/2) + logoImage.size.width,
+                                     center.y-(logoImage.size.height/2) + logoImage.size.height);
 
+    CGContextSaveGState(currentContext); // need to save the state before creating a gradient
+    
+    UIBezierPath *triangle = [self createBezierTrianglePathWithPoints:startPoint p2:endPoint p3:thirdPoint];
+
+    [triangle addClip];
+    
     [self drawGradientWithContext:currentContext startPoint:startPoint endPoint:endPoint];
 
     CGContextRestoreGState(currentContext); // turn off Core Graphics draw methods
@@ -109,6 +107,17 @@
     // need to manually release these as per documentation
     CGGradientRelease(gradient);
     CGColorSpaceRelease(colorspace);
+}
+
+- (UIBezierPath *)createBezierTrianglePathWithPoints:(CGPoint)p1 p2:(CGPoint)p2 p3:(CGPoint)p3 {
+    UIBezierPath *trianglePath = [[UIBezierPath alloc] init];
+    
+    [trianglePath moveToPoint:p1];
+    [trianglePath addLineToPoint:p2];
+    [trianglePath addLineToPoint:p3];
+    [trianglePath closePath];
+    
+    return trianglePath;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
