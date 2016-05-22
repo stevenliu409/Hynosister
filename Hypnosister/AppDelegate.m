@@ -25,9 +25,30 @@
     ViewController *rootVC = [[ViewController alloc] init];
     [self.window setRootViewController:rootVC];
 
+    // Create CGRect for frames
     
-    BNRHypnosisView *firstView = [[BNRHypnosisView alloc] initWithFrame:self.window.bounds];
-    [rootVC.view addSubview:firstView]; //need to add subview to rootViewController and not the app delegate window 
+    CGRect screenRect = self.window.bounds;
+    CGRect bigRect = screenRect;
+    
+    // make the scroll content 2x of the screen
+    bigRect.size.width *= 2;
+//    bigRect.size.height *= 2;
+    
+
+    // Create the screen-size scroll view and add it to the window
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:screenRect];
+    [scrollView setPagingEnabled:YES];
+    [rootVC.view addSubview:scrollView]; //need to add subview to rootViewController and not the app delegate window
+    
+    BNRHypnosisView *firstView = [[BNRHypnosisView alloc] initWithFrame:screenRect];
+    [scrollView addSubview:firstView];
+    
+    // Add a second screen-sized hypnosis view just off screen to the right
+    screenRect.origin.x += screenRect.size.width; // scroll to the right (1 screen to the right)
+    BNRHypnosisView *anotherView = [[BNRHypnosisView alloc] initWithFrame:screenRect];
+    [scrollView addSubview:anotherView]; // Add the new view
+    
+    scrollView.contentSize = bigRect.size;
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
