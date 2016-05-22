@@ -48,7 +48,7 @@
     BNRHypnosisView *anotherView = [[BNRHypnosisView alloc] initWithFrame:screenRect];
     [scrollView addSubview:anotherView]; // Add the new view
     
-    scrollView.contentSize = bigRect.size;
+    scrollView.contentSize = bigRect.size; // Tell the scroll view how big is the content
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
