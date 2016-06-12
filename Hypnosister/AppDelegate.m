@@ -10,8 +10,8 @@
 #import "BNRHypnosisView.h"
 #import "ViewController.h"
 
-@interface AppDelegate ()
-
+@interface AppDelegate () <UIScrollViewDelegate>
+@property (strong, nonatomic) BNRHypnosisView *firstView;
 @end
 
 @implementation AppDelegate
@@ -37,24 +37,35 @@
 
     // Create the screen-size scroll view and add it to the window
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:screenRect];
-    [scrollView setPagingEnabled:YES];
+    scrollView.delegate = self;
+//    [scrollView setPagingEnabled:YES];
     [rootVC.view addSubview:scrollView]; //need to add subview to rootViewController and not the app delegate window
     
-    BNRHypnosisView *firstView = [[BNRHypnosisView alloc] initWithFrame:screenRect];
-    [scrollView addSubview:firstView];
+    self.firstView = [[BNRHypnosisView alloc] initWithFrame:screenRect];
+    [scrollView addSubview:self.firstView];
+    
+    // setup zoom
+    scrollView.minimumZoomScale = 1.0;
+    scrollView.maximumZoomScale = 2.0;
     
     // Add a second screen-sized hypnosis view just off screen to the right
-    screenRect.origin.x += screenRect.size.width; // scroll to the right (1 screen to the right)
-    BNRHypnosisView *anotherView = [[BNRHypnosisView alloc] initWithFrame:screenRect];
-    [scrollView addSubview:anotherView]; // Add the new view
-    
-    scrollView.contentSize = bigRect.size; // Tell the scroll view how big is the content
+//    screenRect.origin.x += screenRect.size.width; // scroll to the right (1 screen to the right)
+//    BNRHypnosisView *anotherView = [[BNRHypnosisView alloc] initWithFrame:screenRect];
+//    [scrollView addSubview:anotherView]; // Add the new view
+//    
+//    scrollView.contentSize = bigRect.size; // Tell the scroll view how big is the content
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
     return YES;
 }
+
+-(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return self.firstView;
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
